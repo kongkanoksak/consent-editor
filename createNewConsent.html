@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Consent HTML Editor – Client-Only</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="grid">
+        <!-- ============================= -->
+        <!-- CONFIGURATION (collapsible)  -->
+        <!-- ============================= -->
+        <div class="card config" style="grid-area: config">
+          <div class="config-header" id="configToggle">
+            <a href="index.html" class="btn back-btn small">← Back</a>
+          </div>
+          <div class="config-header" id="configToggle">
+            <h2>Configuration</h2>
+            <button class="btn small" type="button">Expand</button>
+          </div>
+          <div class="config-body" id="configBody" style="display: none">
+            <form class="config-form" id="configForm" novalidate>
+              <div class="form-row">
+                <label
+                  >URL
+                  <input
+                    type="text"
+                    name="url"
+                    placeholder="https://… (optional)"
+                  />
+                </label>
+                <label
+                  >Disclaimer
+                  <textarea
+                    name="disclaimer"
+                    rows="2"
+                    placeholder="(optional)"
+                  ></textarea>
+                </label>
+                <label
+                  >Consequence
+                  <textarea
+                    name="consequence"
+                    rows="2"
+                    placeholder="(optional)"
+                  ></textarea>
+                </label>
+              </div>
+
+              <div class="form-row radios">
+                <div class="radio-field">
+                  <span class="field">Mandatory</span>
+                  <label
+                    ><input type="radio" name="mandatory" value="yes" />
+                    Yes</label
+                  >
+                  <label
+                    ><input type="radio" name="mandatory" value="no" checked />
+                    No</label
+                  >
+                </div>
+
+                <div class="radio-field">
+                  <span class="field">Staff Revoke</span>
+                  <label
+                    ><input type="radio" name="staffRevoke" value="yes" />
+                    Yes</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      name="staffRevoke"
+                      value="no"
+                      checked
+                    />
+                    No</label
+                  >
+                </div>
+
+                <div class="radio-field">
+                  <span class="field">Customer Revoke</span>
+                  <label
+                    ><input type="radio" name="custRevoke" value="yes" />
+                    Yes</label
+                  >
+                  <label
+                    ><input type="radio" name="custRevoke" value="no" checked />
+                    No</label
+                  >
+                </div>
+
+                <div class="radio-field">
+                  <span class="field">Product Require</span>
+                  <label
+                    ><input type="radio" name="prodRequire" value="yes" />
+                    Yes</label
+                  >
+                  <label
+                    ><input
+                      type="radio"
+                      name="prodRequire"
+                      value="no"
+                      checked
+                    />
+                    No</label
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label
+                  >Composite
+                  <span style="display: block; margin-top: 4px">
+                    <input type="radio" name="composite" value="yes" /> Yes
+                    <input type="radio" name="composite" value="no" checked />
+                    No
+                  </span>
+                </label>
+                <label
+                  >Parent
+                  <input type="text" name="parent" placeholder="(optional)" />
+                </label>
+                <label
+                  >Hidden Period
+                  <input
+                    type="number"
+                    name="hiddenPeriod"
+                    inputmode="numeric"
+                    min="0"
+                    placeholder="numbers only"
+                  />
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label
+                  >Link consent
+                  <input
+                    type="text"
+                    name="linkConsent"
+                    placeholder="(optional)"
+                  />
+                </label>
+                <label
+                  >Relationship
+                  <input
+                    type="text"
+                    name="relationship"
+                    placeholder="(optional)"
+                  />
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label
+                  >Start Date
+                  <input type="date" name="startDate" />
+                </label>
+                <label
+                  >End Date
+                  <input type="date" name="endDate" />
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ============================= -->
+        <!-- UPLOAD (spans both columns)  -->
+        <!-- ============================= -->
+        <div class="card upload" style="grid-area: upload">
+          <div id="drop" class="drop" aria-label="Drop your file here">
+            <div>
+              <strong>Drag & drop</strong> a <span class="kbd">.docx</span>,
+              <span class="kbd">.pdf</span>,
+              <span class="kbd">.html</span>, or
+              <span class="kbd">.txt</span> file here<br />
+              <span class="hint">or choose a file</span>
+            </div>
+          </div>
+          <label class="file-choose">
+            <input id="fileInput" type="file" accept=".docx,.html,.txt,.pdf" />
+            <button class="btn" type="button" id="chooseBtn">
+              Choose file
+            </button>
+          </label>
+        </div>
+
+        <!-- ============================= -->
+        <!-- CONTENT (Agreement + Editor) -->
+        <!-- ============================= -->
+        <div class="card content" style="grid-area: editor">
+          <div class="content-header">
+            <h2
+              style="
+                padding: 16px;
+                border-bottom: 1px solid var(--border);
+                margin: 0;
+              "
+            >
+              Content
+            </h2>
+            <button class="btn" id="submitBtn" title="Send to Google Sheet">
+              Save to Sheet
+            </button>
+          </div>
+          <!-- <div class="config-header" id="configToggle">
+            <h2>Configuration</h2>
+            <button class="btn small" type="button">Expand</button>
+          </div> -->
+
+          <form class="content-form" id="contentForm" novalidate>
+            <div class="form-row">
+              <label
+                >Agreement No (mandatory)
+                <input
+                  type="number"
+                  name="agreementNo"
+                  inputmode="numeric"
+                  required
+                  placeholder="numbers only"
+                />
+              </label>
+              <label
+                >Agreement Version (mandatory)
+                <input
+                  type="number"
+                  name="agreementVersion"
+                  inputmode="numeric"
+                  required
+                  placeholder="numbers only"
+                />
+              </label>
+            </div>
+            <div class="form-row">
+              <label
+                >Language
+                <select name="language" required>
+                  <option value="TH" selected>TH</option>
+                  <option value="EN">EN</option>
+                  <option value="MM">MM</option>
+                  <option value="KH">KH</option>
+                  <option value="CN">CN</option>
+                  <option value="RU">RU</option>
+                </select>
+              </label>
+              <label
+                >Agreement Name (for communicate)
+                <input
+                  type="text"
+                  name="agreementName"
+                  required
+                  placeholder="Enter Agreement Name"
+                />
+              </label>
+            </div>
+            <div class="form-row">
+              <label
+                >Title
+                <input
+                  type="text"
+                  name="title"
+                  required
+                  placeholder="Enter title"
+                />
+              </label>
+            </div>
+          </form>
+
+          <!-- Toolbar (unchanged) -->
+          <div class="toolbar">
+            <div class="toolseg">
+              <button class="tool" data-cmd="bold"><b>B</b></button>
+              <button class="tool" data-cmd="italic"><i>I</i></button>
+              <button class="tool" data-cmd="underline"><u>U</u></button>
+              <button class="tool" data-cmd="strikeThrough"><s>S</s></button>
+              <button class="tool" data-cmd="subscript">x<sub>2</sub></button>
+              <button class="tool" data-cmd="superscript">x<sup>2</sup></button>
+              <button class="tool" id="tableBtn" title="Insert table">
+                Table
+              </button>
+              <button class="tool" id="tableDeleteBtn" title="Delete table">
+                Del Table
+              </button>
+            </div>
+            <div class="toolseg">
+              <select id="sizeSelect" class="tool" title="Font size preset">
+                <option value="size-normal" selected>normal</option>
+                <option value="size-smaller">smaller</option>
+                <option value="size-smallest">smallest</option>
+                <option value="size-larger">larger</option>
+                <option value="size-largest">largest</option>
+              </select>
+              <input
+                type="color"
+                id="colorPicker"
+                class="tool"
+                title="Font color"
+              />
+            </div>
+            <div class="toolseg">
+              <button class="tool" data-cmd="justifyLeft">Left</button>
+              <button class="tool" data-cmd="justifyCenter">Center</button>
+              <button class="tool" data-cmd="justifyRight">Right</button>
+            </div>
+            <div class="toolseg">
+              <button
+                class="tool"
+                data-cmd="insertUnorderedList"
+                title="Bulleted list"
+              >
+                • UL
+              </button>
+              <button
+                class="tool"
+                data-cmd="insertOrderedList"
+                title="Numbered list"
+              >
+                1. OL
+              </button>
+            </div>
+            <div class="toolseg">
+              <button class="tool" id="imageBtn" title="Insert image">
+                Image
+              </button>
+            </div>
+            <div class="toolseg">
+              <button class="tool" data-cmd="indent">Indent</button>
+              <button class="tool" data-cmd="outdent">Outdent</button>
+            </div>
+            <div class="toolseg">
+              <button class="tool" id="linkBtn">Link</button>
+              <button class="tool" id="unlinkBtn">Unlink</button>
+            </div>
+
+            <!-- Image Modal (editor) -->
+            <div
+              class="modal-backdrop"
+              id="imgModal"
+              role="dialog"
+              aria-modal="true"
+              aria-hidden="true"
+              style="display: none"
+            >
+              <div class="modal">
+                <h3>Insert image</h3>
+                <div class="row">
+                  <input
+                    id="imgUrl"
+                    type="url"
+                    placeholder="https://example.com/image.png or data:image/png;base64,..."
+                  />
+                </div>
+                <div class="actions">
+                  <button class="tool" id="imgCancel">Cancel</button>
+                  <button class="btn" id="imgApply">Insert</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table Modal (editor) -->
+            <div
+              class="modal-backdrop"
+              id="tableModal"
+              role="dialog"
+              aria-modal="true"
+              aria-hidden="true"
+              style="display: none"
+            >
+              <div class="modal">
+                <h3>Insert table</h3>
+                <div
+                  class="row"
+                  style="gap: 8px; display: flex; margin-top: 8px"
+                >
+                  <label
+                    >Rows:
+                    <input
+                      id="tableRows"
+                      type="number"
+                      min="1"
+                      value="3"
+                      style="width: 60px"
+                  /></label>
+                  <label
+                    >Cols:
+                    <input
+                      id="tableCols"
+                      type="number"
+                      min="1"
+                      value="3"
+                      style="width: 60px"
+                  /></label>
+                  <label style="display: flex; align-items: center; gap: 6px">
+                    <input id="tableHeader" type="checkbox" /> Header row
+                  </label>
+                </div>
+                <div
+                  class="row"
+                  style="gap: 8px; display: flex; margin-top: 8px"
+                >
+                  <label
+                    >Border color:
+                    <input id="tableBorderColor" type="color" value="#000000"
+                  /></label>
+                  <label
+                    >Border size:
+                    <select id="tableBorderSize">
+                      <option value="1" selected>1px</option>
+                      <option value="2">2px</option>
+                      <option value="3">3px</option>
+                    </select>
+                  </label>
+                </div>
+                <div
+                  class="actions"
+                  style="
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 8px;
+                    margin-top: 12px;
+                  "
+                >
+                  <button class="tool" id="tableCancel">Cancel</button>
+                  <button class="btn" id="tableInsert">Insert</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editor surface -->
+          <div class="editor-pane">
+            <div
+              id="editable"
+              class="editable"
+              contenteditable="true"
+              spellcheck="false"
+            ></div>
+          </div>
+
+          <div class="section hint">
+            Editor scrolls internally. Edits update the mobile preview in real
+            time.
+          </div>
+        </div>
+
+        <!-- ============================= -->
+        <!-- GENERATED HTML (left bottom) -->
+        <!-- ============================= -->
+        <div class="card code" style="grid-area: code">
+          <div class="code-header">
+            <h2>Generated HTML</h2>
+            <button class="btn" id="copyBtn" title="Copy generated HTML">
+              Copy
+            </button>
+            <button class="btn" id="refreshBtn" title="Update code from editor">
+              Update
+            </button>
+          </div>
+          <div class="code-box">
+            <textarea id="codearea" class="codearea" readonly></textarea>
+            <div class="section hint">
+              This is a sanitized fragment (no head/doctype). Copy into your
+              webview.
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================= -->
+        <!-- MOBILE PREVIEW (right)       -->
+        <!-- ============================= -->
+        <div class="card preview" style="grid-area: preview">
+          <div class="phone">
+            <div class="phone-header">Mobile Preview</div>
+            <iframe
+              id="phoneView"
+              class="phone-view"
+              sandbox="allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Link Modal (used by Link button) -->
+    <div
+      class="modal-backdrop"
+      id="modalBackdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      style="display: none"
+    >
+      <div class="modal">
+        <h3>Insert link</h3>
+        <div class="row">
+          <input id="linkUrl" type="url" placeholder="https://example.com" />
+        </div>
+        <div class="actions">
+          <button class="tool" id="linkCancel">Cancel</button>
+          <button class="btn" id="linkApply">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- vendor: PDF.js -->
+    <script src="vendor/pdfjs/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdfjs/pdf.worker.min.js';
+    </script>
+
+
+
+    <script src="docx-converter.js"></script>
+    <script src="app.js"></script>
+    <script src="table-tools.js"></script>
+    <script>
+      // Config toggle behavior (collapsed by default)
+      (function () {
+        const header = document.getElementById("configToggle");
+        const body = document.getElementById("configBody");
+        const btn = header.querySelector("button");
+        header.addEventListener("click", () => {
+          const hidden = body.style.display === "none";
+          body.style.display = hidden ? "block" : "none";
+          btn.textContent = hidden ? "Collapse" : "Expand";
+        });
+      })();
+
+      // TableTools wiring
+      if (window.TableTools) {
+        TableTools.init({
+          editableEl: document.getElementById("editable"),
+          button: document.getElementById("tableBtn"),
+          deleteButton: document.getElementById("tableDeleteBtn"),
+          modal: {
+            root: document.getElementById("tableModal"),
+            rows: document.getElementById("tableRows"),
+            cols: document.getElementById("tableCols"),
+            header: document.getElementById("tableHeader"),
+            insert: document.getElementById("tableInsert"),
+            cancel: document.getElementById("tableCancel"),
+            borderColor: document.getElementById("tableBorderColor"),
+            borderSize: document.getElementById("tableBorderSize"),
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,447 @@
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #111827;
+  --mobile-w: 375px;
+  --mobile-h: 640px;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* Shell */
+.wrap {
+  max-width: 1400px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: grid;
+  gap: 16px;
+}
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr minmax(300px, 420px); /* left | right */
+  grid-template-areas:
+    "config  preview"
+    "upload  preview"
+    "editor  preview"
+    "code    preview";
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.section {
+  padding: 16px;
+}
+h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.back-btn {
+  background: #e2e8f0;
+  color: #0f172a;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  background: #cbd5e1;
+}
+
+
+
+/* Upload */
+.upload {
+  grid-area: upload;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+.drop {
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  flex: 1;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  text-align: center;
+  color: var(--muted);
+}
+.drop.drag {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+.file-choose {
+  white-space: nowrap;
+}
+.file-choose input {
+  display: none;
+}
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.kbd {
+  font: 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+/* Editor */
+.editor {
+  grid-area: editor;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.tool {
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.toolseg {
+  display: flex;
+  gap: 6px;
+}
+.editor-pane {
+  height: 420px;
+  overflow: auto;
+  padding: 16px;
+}
+.editable {
+  min-height: 360px;
+  outline: none;
+}
+.editable:empty:before {
+  content: "Start editing here…";
+  color: #94a3b8;
+}
+
+/* Ensure inserted images resize correctly inside the editor */
+.editable img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+/* Size presets used by JS */
+.size-smallest {
+  font-size: 0.75rem;
+}
+.size-smaller {
+  font-size: 0.875rem;
+}
+.size-normal {
+  font-size: 1rem;
+}
+.size-larger {
+  font-size: 1.125rem;
+}
+.size-largest {
+  font-size: 1.25rem;
+}
+
+/* Preview (mobile) */
+.preview {
+  grid-area: preview;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+}
+.phone {
+  width: var(--mobile-w);
+  height: var(--mobile-h);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.15);
+  overflow: hidden;
+  position: sticky;
+  top: 16px;
+}
+.phone-header {
+  height: 34px;
+  background: #0f172a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.phone-view {
+  width: 100%;
+  height: calc(100% - 34px);
+  border: 0;
+}
+
+/* Code section */
+.code {
+  grid-area: code;
+  display: flex;
+  flex-direction: column;
+}
+.code .section {
+  padding: 0;
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.code-box {
+  padding: 16px;
+}
+textarea.codearea {
+  width: 100%;
+  height: 220px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+  font-size: 12.5px;
+  line-height: 1.45;
+  border: 0;
+  outline: none;
+  resize: vertical;
+  color: #0f172a;
+  background: #fff;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+.modal {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 420px;
+  width: 100%;
+}
+.modal h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.modal .row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.modal input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.modal .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* (Optional) image resizer overlay used by app.js */
+.img-resizer {
+  position: absolute;
+  border: 2px solid #3b82f6;
+  border-radius: 4px;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+.img-resizer .handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  cursor: nwse-resize;
+}
+.img-resizer .handle.nw {
+  left: -8px;
+  top: -8px;
+  cursor: nwse-resize;
+}
+.img-resizer .handle.ne {
+  right: -8px;
+  top: -8px;
+  cursor: nesw-resize;
+}
+.img-resizer .handle.sw {
+  left: -8px;
+  bottom: -8px;
+  cursor: nesw-resize;
+}
+.img-resizer .handle.se {
+  right: -8px;
+  bottom: -8px;
+  cursor: nwse-resize;
+}
+
+/* ---- Config collapsible card ---- */
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.config-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.btn.small {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.config-body {
+  padding: 16px;
+}
+
+.config-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.config-form label {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: var(--muted);
+}
+.config-form input,
+.config-form textarea,
+.config-form select {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+.config-form textarea {
+  resize: vertical;
+}
+.config-form .radios label {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ---- Content (agreement meta) ---- */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  /* cursor: pointer; */
+}
+
+.content-form {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.content-form .form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.content-form label {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: var(--muted);
+}
+.content-form input,
+.content-form select {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+/* Make the image-resizer overlay track the image in viewport space */
+.img-resizer {
+  position: fixed !important;
+  z-index: 9999;
+}
